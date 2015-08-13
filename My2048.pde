@@ -3,12 +3,11 @@
 */
 
 //below are the definitions of variable and 4x4 board grid
-int [][] board = new int[4][4];
+int [][] board = new int [4][4];
 int padding= 20, blockSize= 100, len = padding*(board.length+1)+blockSize*board.length;
 int score = 0, MovePossible =0;
-int left,up;
+int right,down;
 boolean C_pressed = false;
-
 
 
 void setup(){
@@ -22,7 +21,7 @@ void restart(){
   score = 0;
   MovePossible = 1;
   generateBlock();                  //first block
-  generateBlock();
+  generateBlock();                  //second block
   C_pressed = false;
   //board[0][0]=1024;               //test for when the game is won
   //board[0][3]=1024;
@@ -112,15 +111,70 @@ if(moveposs == 0){
 
 
 
-//function that draw 'you won' text
+//function that draws 'you won' text
 void textYouWon(boolean wonistrue){  
   if(wonistrue == true && C_pressed == false) {
       fill(color(0));
       text("YOU have WON!!!",width/2,height/3,30);
       text("Press C to continue!",width/2,height/6,30);
       textSize(36);
+     
   }
 }
+
+//function that checks if the game is won
+boolean CheckYouWon(){  
+  boolean Won = false;
+  for(int j = 0; j < board.length; j++){    
+    for(int i = 0; i < board.length; i++){
+      if(board[j][i] >= 2048)
+        Won = true;
+    }
+  }
+    if(keyPressed){                              
+      if (key == 'c' || key == 'C')
+         C_pressed = true;
+      }
+  return Won;
+}
+
+//play the game 
+void keyPressed() {
+  if(MovePossible != 0){
+    switch (keyCode) {
+      case 37://LEFT
+          right = -1;
+          down = 0;
+      break;
+      case 38://UP
+          down =-1;
+          right =0;
+        break; 
+      case 39://RIGHT
+           right = 1;
+           down = 0;
+        break; 
+      case 40://DOWN
+           down = 1;
+           right = 0;
+        break; 
+      default://no other keys can influence the movement
+            down = 0;
+           right = 0;
+        break;  
+      }
+    
+    CheckRestartGame();      //check if restart key 'r' or 'R' is pressed before slide the blocks
+    movement();              //slide the block if possible
+    CheckYouWon();           //check if the game is won 
+    
+  }
+    if(NoGameOver()){        //check if game over
+        MovePossible = 1;
+    }else
+        MovePossible = 0;
+}
+
 
 //function that generate random block 
 void generateBlock(){                                         
@@ -139,67 +193,13 @@ void generateBlock(){
       int x= column.get(randnum);
       int y= row.get(randnum);
     
-      if(random(0,2) < 0.9)                                  //generate num(2 or 4) block randomly
+      if(random(0,2) < 1)                                  //generate num(2 or 4) block randomly
         board[y][x] =2;
       else
         board[y][x] =4; 
 };
 
 
-//function that checks if the game is won
-boolean CheckYouWon(){  
-  boolean Won = false;
-  for(int j = 0; j < board.length; j++){    
-    for(int i = 0; i < board.length; i++){
-      if(board[j][i] >= 2048)
-        Won = true;
-    }
-  }
-    if(keyPressed){                              
-      if (key == 'c' || key == 'C')
-         C_pressed = true;
-            
-      }
-  return Won;
-}
- 
- //play the game 
-void keyPressed() {
-  if(MovePossible != 0){
-    switch (keyCode) {
-      case 37://LEFT
-          left = -1;
-          up = 0;
-      break;
-      case 38://UP
-          up =-1;
-          left =0;
-        break; 
-      case 39://RIGHT
-           left = 1;
-           up = 0;
-        break; 
-      case 40://Down
-           up = 1;
-           left = 0;
-        break; 
-      default://no other key can influence the movement
-            up = 0;
-           left = 0;
-        break;  
-      }
-    
-    CheckRestartGame();      //check if restart key 'r' or 'R' is pressed before slide the blocks
-    movement();              //slide the block if possible
-    CheckYouWon();           //check if the game is won 
-    
-  }
-    if(NoGameOver()){
-        MovePossible = 1;
-    }else
-        MovePossible = 0;
-}
- 
  //main function 
 int[][] play(int UpDown, int RightLeft, boolean scoreupdate){
   int[][] backup = new int[4][4];                                          //make a backup copy of the board
@@ -212,16 +212,20 @@ int[][] play(int UpDown, int RightLeft, boolean scoreupdate){
   
   boolean moved =false;
   
-  //run play function only when either (Up,Down,Right,Left) key pressed
+  //run play function only when either (Up,Down,Right,Left) key is pressed
   if(UpDown !=0 || RightLeft !=0){
-    int step_direction = RightLeft !=0 ? RightLeft : UpDown;
+    int step_direction = RightLeft !=0 ? RightLeft : UpDown;        
 
-    //slide all the blocks to the appropriate directions(up,down,right,left)
+    //slide all the blocks to the corresponding directions(up,down,right,left)
+    
+    /*Here we check each blocks by visiting them. Lets say the user has pressed the key left(UpDown = 0,Rightleft=-1) Starting from row '0' and column '1',we check if the blocks are empty.
+    If empty then skip to next column. If not empty calculate how many blocks it should slide;stop the slide if the following block in left direction is not empty. 
+    Merge if the block have same number.Clear the current block if a move is made. Repeat the steps for next row or column depending on the direction    */
     
     //n-th row (n=0,1,2,4)
     for(int nth_row = 0;  nth_row < board.length; nth_row++)
       for(int nth_column = (step_direction > 0 ? board.length-2 : 1);  nth_column != (step_direction > 0 ? -1: board.length); nth_column -= step_direction){        //nth-cloumn (n=0,1,2,3)
-          int y = RightLeft != 0 ? nth_row : nth_column;
+          int y = RightLeft != 0 ? nth_row : nth_column;                //determine the coordinate xy of the block for (right and left) and (up and down)
           int x = RightLeft != 0 ? nth_column : nth_row;
           int dy = y;                                                   //change in the direction -y     
           int dx = x;                                                   //change in the direction -x 
@@ -233,7 +237,7 @@ int[][] play(int UpDown, int RightLeft, boolean scoreupdate){
             //calculate how many blocks the current block should slide in the direction
             //x and y are the current block position, tx and ty are where the block is sliding into
             for(int i = (RightLeft != 0 ? x : y)+step_direction; i != (step_direction > 0 ? board.length : -1); i+=step_direction){
-              int a = RightLeft != 0 ? y : i;
+              int a = RightLeft != 0 ? y : i;                          //xy-coordinate
               int b = RightLeft != 0 ? i : x;
               
               //stop the slide if blocks are not empty and the value is not equal
@@ -250,9 +254,9 @@ int[][] play(int UpDown, int RightLeft, boolean scoreupdate){
             if((RightLeft != 0 && dx == x) || (UpDown != 0 && dy == y)) continue;
             
             
-            //merging two blocks
+            //if the block moves into new position then merge the blocks if their number is same
             else if(backup[dy][dx] == board[y][x]){ 
-              backup[dy][dx] *= 2; //power of 2
+              backup[dy][dx] *= 2;                                       //times 2
               if(scoreupdate) 
                 score += backup[dy][dx];
                 updateScore(score);
@@ -265,7 +269,9 @@ int[][] play(int UpDown, int RightLeft, boolean scoreupdate){
               backup[dy][dx] = backup[y][x];
               moved =true;
             }
-            if(moved)
+            
+            
+            if(moved)                                
               backup[y][x]= 0;                       //clear the block
             
           }
@@ -276,19 +282,19 @@ int[][] play(int UpDown, int RightLeft, boolean scoreupdate){
   
 //conditions to check if the game is over
 boolean NoGameOver(){
-  int [] Left = {1,-1,0,0}, Down = {0,0,1,-1};
+  int [] Right = {1,-1,0,0}, Down = {0,0,1,-1};          //values for the up,down,left,right key.
   boolean gameover = false;
   
     for(int i=0; i < 4; i++){
-      if(play(Down[i],Left[i],false) != null)
+      if(play(Down[i],Right[i],false) != null)           //If no movement is possible the function returns null 
         gameover = true;
     }
     return gameover;
 };
 
-//move the blocks, if successfully generate new block
+//move the blocks and generate new block
 boolean movement(){
-    int[][] newboard  = play(up,left,true);
+    int[][] newboard  = play(down,right,true);
     if(newboard != null){
       board = newboard;
       generateBlock();
