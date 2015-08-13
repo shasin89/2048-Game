@@ -67,9 +67,9 @@ Backup block column[1] has the new position of column[0]. Both back up block and
                                         Updated backup block
                                         |2|0|0|4|
 
-6.Repeat the step 2 until all blocks in a column are visited.  
+6.Repeat the step 2 until all blocks in a column are visited.
 
-					                              Original Current block
+								Original Current block
                                         |2|2|0|4|
 
                                         BackupBlock
