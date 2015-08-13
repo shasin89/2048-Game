@@ -59,6 +59,7 @@ Block Column[1] slides to column [0] = 1 block to left
 Backup block column[1] has the new position of column[0]. Both back up block and original current block have the same number. They are added and the current block is updated with the new value.
 
 5.If the position of new block in the original grid is empty, then switch the number block with the empty block.
+
                                         Original Current block
                                         |0|2|0|4|
 
