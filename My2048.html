@@ -5,12 +5,37 @@
        <script src="processing.js"></script>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
-  <body>
+    <body>
     <h1>2048</h1>
       <p>This is my version of 2048.  The codes are written in processing IDE.</p>
+        
+        <h3>Rules to play the game:</h3>
+<ol>
+    <li>2048 played on a 4x4 grid, with numbered tiles that slide when a player moves them using the four arrow keys</li>
+
+<li>For every turn, a new tile will randomly appear in an empty tile with a value of either 2 or 4</li>
+
+<li>Tiles slide in the chosen direction as far as possible and are stopped by either another tile or the edge of board</li>
+
+<li>If two tiles of the same number collide, they will merge into a tile with the number multiplies by two</li>
+
+<li>The resulting tile cannot merge with another tile again in the same move</li>
+
+<li>The game is won when a tile with a value of 2048 appears</li>
+
+<li>The game ends when there are no empty blocks and adjacent tiles with the same value</li>
+</ol>
+        
+        <p>Source:<a href="https://en.wikipedia.org/wiki/2048_(video_game)">https://en.wikipedia.org/wiki/2048_(video_game)</a></p>
+                    <a href = "https://github.com/shasin89/2048-Game">Click here for the Source Code</a>
         <p>Click on the canvas and play the game:</p>
          <p>Press 'r' longer to re-start the game</p>
+        
+
+        
    <canvas data-processing-sources="My2048.pde"></canvas>
- </body>
+ 
+
+    </body>
 </html>
  
