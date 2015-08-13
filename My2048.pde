@@ -15,7 +15,7 @@ void setup(){
   restart();
 };
 
-//empty the grid when the user request restart
+//empty the grid when the user requests restart
 void restart(){
   board = new int[4][4];
   score = 0;
@@ -23,7 +23,7 @@ void restart(){
   generateBlock();                  //first block
   generateBlock();                  //second block
   C_pressed = false;
-  //board[0][0]=1024;               //test for when the game is won
+  //board[0][0]=1024;               //test values to check game is won
   //board[0][3]=1024;
   
 };
@@ -218,8 +218,8 @@ int[][] play(int UpDown, int RightLeft, boolean scoreupdate){
 
     //slide all the blocks to the corresponding directions(up,down,right,left)
     
-    /*Here we check each blocks by visiting them. Lets say the user has pressed the key left(UpDown = 0,Rightleft=-1) Starting from row '0' and column '1',we check if the blocks are empty.
-    If empty then skip to next column. If not empty calculate how many blocks it should slide;stop the slide if the following block in left direction is not empty. 
+    /*Here we check each blocks by visiting them. Lets say the user has pressed the key left(UpDown = 0,Rightleft=-1) Starting from row '0' and column '1' (column '2' for 'right' key) ,we check if the blocks are empty.
+    If empty then skip to next column. If not empty calculate how many blocks it should slide;stop the slide if the following block in left(right) direction is not empty. 
     Merge if the block have same number.Clear the current block if a move is made. Repeat the steps for next row or column depending on the direction    */
     
     //n-th row (n=0,1,2,4)
