@@ -5,9 +5,9 @@ In case you don’t know the rules, please read the rules of the original 2048 G
 
 Rules to play 2048 Game:
 
-1. 2048 played on a 4x4 grid, with numbered tiles that slide when a player moves them using the four arrow keys.
+1.2048 played on a 4x4 grid, with numbered tiles that slide when a player moves them using the four arrow keys.
 
-2. For every turn, a new tile will randomly appear in an empty tile with a value of either 2 or 4.
+2.For every turn, a new tile will randomly appear in an empty tile with a value of either 2 or 4.
 
 3.Tiles slide in the chosen direction as far as possible and are stopped by either another tile or the edge of board.
 
